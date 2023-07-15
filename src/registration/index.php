@@ -1,3 +1,9 @@
+<?php
+  ini_set('display_errors', 0);
+  ini_set('display_startup_errors', 0);
+  error_reporting(0);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -36,7 +42,9 @@
           </div>
           <ul class="hidden lg:w-auto lg:space-x-12 lg:items-center lg:flex">
             <li>
-              <a href="../index.html" class="text-sm text-gray-700 hover:text-teal-700"
+              <a
+                href="../index.html"
+                class="text-sm text-gray-700 hover:text-teal-700"
                 >Home</a
               >
             </li>
@@ -63,7 +71,7 @@
               >Log In</a
             >
             <a
-              href="./index.html"
+              href="./index.php"
               class="inline-block px-4 py-3 mr-2 text-xs font-semibold leading-none text-gray-100 bg-teal-600 border border-teal-200 rounded hover:bg-teal-700"
               >SignUp</a
             >
@@ -129,12 +137,12 @@
           </ul>
           <div class="block mt-5 lg:hidden">
             <a
-              href=""
+              href="../login/index.php"
               class="inline-block w-full px-4 py-3 mb-4 mr-2 text-xs font-semibold leading-none text-center text-teal-600 border border-teal-400 rounded hover:text-teal-700 hover:border-teal-300"
               >Log In</a
             >
             <a
-              href=""
+              href="./index.php"
               class="inline-block w-full px-4 py-3 mr-2 text-xs font-semibold leading-none text-center text-gray-100 bg-teal-600 rounded hover:bg-teal-700"
               >Sign Up
             </a>
@@ -189,8 +197,7 @@
               </div>
 
               <div>
-                <label
-                  class="block mb-2 text-sm text-gray-200"
+                <label class="block mb-2 text-sm text-gray-200"
                   >Last name</label
                 >
                 <input
@@ -202,8 +209,7 @@
               </div>
 
               <div>
-                <label
-                  class="block mb-2 text-sm text-gray-200"
+                <label class="block mb-2 text-sm text-gray-200"
                   >Phone number</label
                 >
                 <input
@@ -215,8 +221,7 @@
               </div>
 
               <div>
-                <label
-                  class="block mb-2 text-sm text-gray-200"
+                <label class="block mb-2 text-sm text-gray-200"
                   >Email address</label
                 >
                 <input
@@ -228,10 +233,7 @@
               </div>
 
               <div>
-                <label
-                  class="block mb-2 text-sm text-gray-200"
-                  >Password</label
-                >
+                <label class="block mb-2 text-sm text-gray-200">Password</label>
                 <input
                   type="password"
                   name="password"
@@ -241,8 +243,7 @@
               </div>
 
               <div>
-                <label
-                  class="block mb-2 text-sm text-gray-200"
+                <label class="block mb-2 text-sm text-gray-200"
                   >Confirm password</label
                 >
                 <input
@@ -271,6 +272,12 @@
                   />
                 </svg>
               </button>
+              <div class="text-red-600">
+                <?php
+                  $message = $_GET['error'];
+                ?>
+                <p class=""><?php echo $message; ?></p>
+              </div>
             </form>
           </div>
         </div>

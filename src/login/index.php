@@ -69,7 +69,7 @@
               >Log In</a
             >
             <a
-              href="../registration/index.html"
+              href="../registration/index.php"
               class="inline-block px-4 py-3 mr-2 text-xs font-semibold leading-none text-gray-100 bg-teal-600 border border-teal-200 rounded hover:bg-teal-700"
               >SignUp</a
             >
@@ -87,7 +87,7 @@
           :class="{'translate-x-0 ease-in-opacity-100' :open===true, '-translate-x-full ease-out opacity-0' : open===false}"
         >
           <div class="flex justify-between lg:">
-            <a class="p-2 text-2xl font-bold text-gray-700" href="#"
+            <a class="p-2 text-2xl font-bold text-gray-700" href="../index.html"
               >Club Management</a
             >
             <button
@@ -135,12 +135,12 @@
           </ul>
           <div class="block mt-5 lg:hidden">
             <a
-              href=""
+              href="./index.php"
               class="inline-block w-full px-4 py-3 mb-4 mr-2 text-xs font-semibold leading-none text-center text-teal-600 border border-teal-400 rounded hover:text-teal-700 hover:border-teal-300"
               >Log In</a
             >
             <a
-              href=""
+              href="../registration/index.php"
               class="inline-block w-full px-4 py-3 mr-2 text-xs font-semibold leading-none text-center text-gray-100 bg-teal-600 rounded hover:bg-teal-700"
               >Sign Up
             </a>

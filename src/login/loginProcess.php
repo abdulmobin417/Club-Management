@@ -1,9 +1,17 @@
 <?php
+  require_once('../db/db.php');
+
   $email = $_POST['email'];
   $password = $_POST['password'];
-  // echo $email . ' ' . $password;
 
-  if($password == '1234' && $email == 'abdulmobin417@gmail.com'){
+  $query = "SELECT * FROM `users` WHERE email = '$email' AND password  = '$password';";
+  $createQuery = mysqli_query($conn, $query);
+  $userData = mysqli_fetch_array($createQuery);
+  $count=mysqli_num_rows($createQuery);
+  
+  if ($count > 0){
+    session_start();
+    $_SESSION['userId'] = $userData['userId'];
     header('location:../user/index.php');
   }else if($email == 'abdulmobin417@gmail.com'){
     header('location:index.php?error=Password does not match');
@@ -12,4 +20,5 @@
   }else{
     header('location:index.php?error=Invalid Email and Password');
   }
+
 ?>
