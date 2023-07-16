@@ -57,7 +57,7 @@
               >
             </li>
             <li>
-              <a href="" class="text-sm text-gray-700 hover:text-teal-700"
+              <a href="../aboutus/index.html" class="text-sm text-gray-700 hover:text-teal-700"
                 >About Us</a
               >
             </li>
@@ -128,7 +128,7 @@
               >
             </li>
             <li class="pb-3">
-              <a href="" class="text-sm text-gray-700 hover:text-teal-400"
+              <a href="../aboutus/index.html" class="text-sm text-gray-700 hover:text-teal-400"
                 >About Us</a
               >
             </li>
@@ -309,6 +309,11 @@
       </div>
     </section>
     <!-- Login Section End -->
+    <footer>
+      <?php
+        include('../footer/footer.php');
+      ?>
+    </footer>
 
     <!-- Script Section -->
     <script

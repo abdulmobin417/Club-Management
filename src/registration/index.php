@@ -11,6 +11,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <link rel="stylesheet" href="../style.css" />
+    <style>
+      input::file-selector-button {
+        font-weight: bold;
+        color: white;
+        padding: 0.9em;
+        border: 2px solid #242424;
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+        background-color: #242424;
+        margin-right: 10px;
+      }
+    </style>
   </head>
   <body>
     <!-- Navbar Section Start -->
@@ -59,7 +71,7 @@
               >
             </li>
             <li>
-              <a href="" class="text-sm text-gray-700 hover:text-teal-700"
+              <a href="../aboutus/index.html" class="text-sm text-gray-700 hover:text-teal-700"
                 >About Us</a
               >
             </li>
@@ -130,7 +142,7 @@
               >
             </li>
             <li class="pb-3">
-              <a href="" class="text-sm text-gray-700 hover:text-teal-400"
+              <a href="../aboutus/index.html" class="text-sm text-gray-700 hover:text-teal-400"
                 >About Us</a
               >
             </li>
@@ -153,7 +165,7 @@
     <!-- Navbar Section End -->
 
     <!-- Registration Section Start -->
-    <section class="bg-teal-500">
+    <section class="bg-teal-500 max-w-7xl mx-auto">
       <div class="flex justify-center min-h-screen">
         <div
           class="hidden bg-cover lg:block lg:w-2/5"
@@ -163,7 +175,7 @@
         ></div>
 
         <div class="flex items-center w-full max-w-3xl mx-auto lg:w-3/5">
-          <div class="w-full border border-white p-16 rounded-lg">
+          <div class="w-full border border-white p-8 mx-4 rounded-lg">
             <h1
               class="text-3xl font-semibold text-white tracking-wider capitalize"
             >
@@ -175,15 +187,21 @@
               and begin setting up your profile.
             </p>
 
-            <div class="mt-6 dark:text-white text-center text-2xl font-bold">
+            <div class="mt-6 text-white text-center text-2xl font-bold">
               Sign Up Form
             </div>
 
             <form
               action="./signUpProcess.php"
               method="POST"
-              class="grid grid-cols-1 gap-6 mt-8 md:grid-cols-2"
+              enctype="multipart/form-data"
+              class="grid grid-cols-1 gap-6 mt-4 md:grid-cols-2"
             >
+              <div class="col-span-2">
+                <label class="block mb-2 text-lg font-semibold text-gray-200" for="small_size">Upload File</label>
+                <input class="block w-full text-xs text-gray-900 rounded-lg cursor-pointer bg-gray-50" id="small_size" type="file" name="file">
+              </div>
+
               <div>
                 <label class="block mb-2 text-sm text-gray-200"
                   >First Name</label
@@ -284,6 +302,12 @@
       </div>
     </section>
     <!-- Registration Section End -->
+
+    <footer>
+      <?php
+        include('../footer/footer.php');
+      ?>
+    </footer>
 
     <!-- Script Section -->
     <script

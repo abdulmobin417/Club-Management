@@ -17,6 +17,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <link rel="stylesheet" href="../style.css" />
+    <link
+      href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"
+      defer
+    ></script>
   </head>
   <body>
     <!-- Navbar Section Start -->
@@ -403,10 +411,36 @@
       <div><h1>This is After Login page and USER ID <?php echo $userId; ?></h1></div>
     </section>
 
+    <!-- Footer Section Start -->
+    <footer>
+      <?php
+        include('../footer/footer.php');
+      ?>
+    </footer>
+    <!-- Footer Section End -->
+
     <!-- Script Section -->
     <script
       defer
       src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"
     ></script>
+    <script src="../js/sweetalert.js"></script>
+    <?php if(isset($_SESSION['login_Status']) && $_SESSION['login_Status'] != ''){ ?>
+    
+    <script>
+      swal({
+        title: "<?php echo $_SESSION['message']; ?>",
+        text: "<?php echo $_SESSION['login_Status']; ?>",
+        icon: "<?php echo $_SESSION['Status']; ?>",
+        button: "OK. Done!",
+      });
+    </script>
+
+    <?php 
+        unset($_SESSION['login_Status']); 
+        unset($_SESSION['Status']); 
+        unset($_SESSION['message']); 
+      } 
+    ?>
   </body>
 </html>

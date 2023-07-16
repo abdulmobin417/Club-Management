@@ -8,6 +8,9 @@
   $query = "SELECT * FROM `users` WHERE userId = '$userId';";
   $createQuery = mysqli_query($conn, $query);
   $userData = mysqli_fetch_array($createQuery);
+
+  $clubQuery = "SELECT * FROM `clubs` WHERE userId = '$userId';";
+  $ClubCreateQuery = mysqli_query($conn, $clubQuery);
 ?>
 
 <!DOCTYPE html>
@@ -569,7 +572,7 @@
                     <div class="px-4 py-2">Arlington Heights, IL, Illinois</div>
                   </div>
                   <div class="grid grid-cols-2">
-                    <div class="px-4 py-2 font-semibold">Email.</div>
+                    <div class="px-4 py-2 font-semibold">Email</div>
                     <div class="px-4 py-2">
                       <a class="text-blue-800" href="mailto:jane@example.com"
                         ><?php echo $userData['email']; ?></a
@@ -582,11 +585,13 @@
                   </div>
                 </div>
               </div>
-              <button
-                class="block w-full text-blue-800 text-sm font-semibold rounded-lg hover:bg-gray-100 focus:outline-none focus:shadow-outline focus:bg-gray-100 hover:shadow-xs p-3 my-4"
-              >
-                <a href="#">Edit Profile</a>
-              </button>
+              <a href="./edit.php">
+                <button
+                  class="block w-full text-blue-800 text-sm font-semibold rounded-lg hover:bg-gray-100 focus:outline-none focus:shadow-outline focus:bg-gray-100 hover:shadow-xs p-3 my-4"
+                >
+                  Edit Profile
+                </button>
+              </a>
             </div>
             <!-- End of about section -->
 
@@ -594,7 +599,7 @@
 
             <!-- Experience and education -->
             <div class="bg-white p-3 shadow-sm rounded-sm">
-              <div class="grid grid-cols-2">
+              <div class="grid grid-cols-3">
                 <div>
                   <div
                     class="flex items-center space-x-2 font-semibold text-gray-900 leading-8 mb-3"
@@ -674,6 +679,64 @@
                     </li>
                   </ul>
                 </div>
+                <div>
+                  <div
+                    class="flex items-center space-x-2 font-semibold text-gray-900 leading-8 mb-3"
+                  >
+                    <span clas="text-green-500">
+                      <svg
+                        class="h-5"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path fill="#fff" d="M12 14l9-5-9-5-9 5 9 5z" />
+                        <path
+                          fill="#fff"
+                          d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"
+                        />
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222"
+                        />
+                      </svg>
+                    </span>
+                    <span class="tracking-wide">Your Clubs</span>
+                  </div>
+                  <ul class="list-inside space-y-2">
+                    <?php
+                      if($ClubCreateQuery->num_rows>0){
+                        while($row = mysqli_fetch_assoc($ClubCreateQuery)){
+                          // $clubName = $row['clubName'];
+                          $clubName = $row['clubWork'];
+                          $clubName = $row['clubGoal'];
+                          $clubName = $row['clubDescription'];
+                    ?>
+                    <li>
+                      <div class="text-black"><?php echo $row['clubName']; ?></div>                    
+                      <div class="text-teal-500 text-xs">
+                        Description: <?php echo $row['clubDescription']; ?>
+                      </div>
+                      <div class="text-gray-500 text-xs flex justify-between">
+                        <div>Club-Type: <?php echo $row['clubWork']; ?></div>
+                        <div>Club-Goal: <?php echo $row['clubGoal']; ?></div>
+                      </div>
+                    </li>
+                    <?php
+                        }
+                      }else{
+                    ?>
+                    <li>
+                      <div class="text-gray-500 text-xs">You haven't created any club</div>
+                    </li>
+                    <?php
+                      }
+                    ?>
+                  </ul>
+                </div>
               </div>
               <!-- End of Experience and education grid -->
             </div>
@@ -683,11 +746,32 @@
       </div>
     </section>
 
+    <!-- Footer Section Start -->
+    <footer>
+      <?php
+        include('../../footer/footer.php');
+      ?>
+    </footer>
+    <!-- Footer Section End -->
+
     <!-- Script Section -->
     <script
       defer
       src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"
     ></script>
+    <script src="../../js/sweetalert.js"></script>
+    <?php if(isset($_SESSION['Profile_Status']) && $_SESSION['Profile_Status'] != ''){ ?>
+    
+    <script>
+      swal({
+        title: "<?php echo $_SESSION['message']; ?>",
+        text: "<?php echo $_SESSION['Profile_Status']; ?>",
+        icon: "<?php echo $_SESSION['Status']; ?>",
+        button: "OK. Done!",
+      });
+    </script>
+
+    <?php unset($_SESSION['Profile_Status']); } ?>
   </body>
 </html>
 
