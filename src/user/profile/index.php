@@ -66,17 +66,17 @@
               >
             </li>
             <li>
-              <a href="" class="text-sm text-gray-700 hover:text-teal-700"
+              <a href="../clubList/index.php" class="text-sm text-gray-700 hover:text-teal-700"
                 >Clubs</a
               >
             </li>
             <li>
-              <a href="" class="text-sm text-gray-700 hover:text-teal-700"
+              <a href="../eventList/index.php" class="text-sm text-gray-700 hover:text-teal-700"
                 >Events</a
               >
             </li>
             <li>
-              <a href="" class="text-sm text-gray-700 hover:text-teal-700"
+              <a href="../../aboutus/index.html" class="text-sm text-gray-700 hover:text-teal-700"
                 >About Us</a
               >
             </li>
@@ -710,10 +710,6 @@
                     <?php
                       if($ClubCreateQuery->num_rows>0){
                         while($row = mysqli_fetch_assoc($ClubCreateQuery)){
-                          // $clubName = $row['clubName'];
-                          $clubName = $row['clubWork'];
-                          $clubName = $row['clubGoal'];
-                          $clubName = $row['clubDescription'];
                     ?>
                     <li>
                       <div class="text-black"><?php echo $row['clubName']; ?></div>                    

@@ -8,14 +8,17 @@
   $query = "SELECT * FROM `users` WHERE userId = '$userId';";
   $createQuery = mysqli_query($conn, $query);
   $userData = mysqli_fetch_array($createQuery);
+
+  $clubQuery = "SELECT * FROM `clubs`;";
+  $createClubQuery = mysqli_query($conn, $clubQuery);
 ?>
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Profile</title>
+    <title>Club List</title>
     <link rel="stylesheet" href="../../style.css" />
     <link
       href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css"
@@ -26,7 +29,7 @@
       defer
     ></script>
   </head>
-  <body class="">
+  <body>
     <!-- Navbar Section Start -->
     <section class="shadow-lg font-poppins">
       <div class="max-w-6xl px-4 mx-auto" x-data="{open:false}">
@@ -63,17 +66,17 @@
               >
             </li>
             <li>
-              <a href="" class="text-sm text-gray-700 hover:text-teal-700"
+              <a href="./index.php" class="text-sm text-gray-700 hover:text-teal-700"
                 >Clubs</a
               >
             </li>
             <li>
-              <a href="../eventList/index.php" class="text-sm text-gray-700 hover:text-teal-700"
+              <a href="" class="text-sm text-gray-700 hover:text-teal-700"
                 >Events</a
               >
             </li>
             <li>
-              <a href="" class="text-sm text-gray-700 hover:text-teal-700"
+              <a href="../../aboutus/index.html" class="text-sm text-gray-700 hover:text-teal-700"
                 >About Us</a
               >
             </li>
@@ -93,7 +96,7 @@
                     <div>
                       <a
                         href="#"
-                        class="flex px-4 py-2 text-sm text-gray-700 hover:text-teal-500"
+                        class="flex items-center px-4 py-2 text-sm text-gray-700 hover:text-teal-500"
                       >
                         <span class="mr-2">
                           <svg
@@ -411,254 +414,37 @@
     </section>
     <!-- Navbar Section End -->
 
-    <section class="py-1 bg-blueGray-50">
-      <div class="w-full lg:w-8/12 px-4 mx-auto mt-6">
-        <div
-          class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-100 border-0"
-        >
-          <div class="rounded mb-0 px-6 py-6 z-0">
-            <div class="bg-white">
-              <h6 class="text-blueGray-700 text-xl font-bold">
-                Create Your Club
-              </h6>
-            </div>
+    <main class="mt-10">
+      <?php
+        if($createClubQuery->num_rows>0){
+          while($row = mysqli_fetch_assoc($createClubQuery)){
+            if(strlen($row['clubDescription'] > 400)){
+              $description = substr($row['clubDescription'],0,390); 
+            }
+      ?>
+      <!-- component -->
+      <section class="bg-gray-100 max-w-7xl mx-auto px-6 rounded-md shadow-md mb-10">
+          <div class="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:grid-cols-12">
+              <div class="mr-auto place-self-center lg:col-span-7">
+                  <h1 class="max-w-2xl mb-4 text-3xl font-bold tracking-tight leading-none md:text-3xl xl:text-4xl">Welcome To <?php echo $row['clubName']; ?></h1>
+                  <p class="max-w-2xl mb-6 font-light text-gray-600 lg:mb-8 md:text-base lg:text-lg text-justify">Welcome to <?php echo $row['clubName'] . ', ' . $description . '...'; ?></p>
+                  <a href="../clubDetails/index.php?clubId=<?php echo $row['clubId']; ?>" class="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center bg-teal-500 text-white border border-gray-300 rounded-lg hover:bg-teal-600 focus:ring-4 focus:ring-gray-100">
+                      View Details
+                  </a> 
+              </div>
+              <div class="hidden w-2/3 mx-auto lg:mt-0 lg:col-span-5 lg:flex rounded-lg">
+                  <img src="../../images/<?php echo $row['image']; ?>" alt="mockup" class="rounded-lg">
+              </div>                
           </div>
-          <div class="flex-auto px-4 lg:px-10 py-10 pt-0">
-            <form action="./process.php" method="POST">
-              <h6
-                class="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase"
-              >
-                User Information
-              </h6>
-              <div class="flex flex-wrap">
-                <div class="w-full lg:w-6/12 px-4">
-                  <div class="relative w-full mb-3">
-                    <label
-                      class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                      htmlfor="grid-password"
-                    >
-                      Email address
-                    </label>
-                    <input
-                      type="email"
-                      name="email"
-                      class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                      value="<?php echo $userData['email']; ?>"
-                      disabled
-                    />
-                  </div>
-                </div>
-                <div class="w-full lg:w-6/12 px-4">
-                  <div class="relative w-full mb-3">
-                    <label
-                      class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                      htmlfor="grid-password"
-                    >
-                      password
-                    </label>
-                    <input
-                      type="password"
-                      class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                      value="<?php echo $userData['password']; ?>"
-                      disabled
-                    />
-                  </div>
-                </div>
-                <div class="w-full lg:w-6/12 px-4">
-                  <div class="relative w-full mb-3">
-                    <label
-                      class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                      htmlfor="grid-password"
-                    >
-                      First Name
-                    </label>
-                    <input
-                      type="text"
-                      class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                      value="<?php echo $userData['FirstName']; ?>"
-                      disabled
-                    />
-                  </div>
-                </div>
-                <div class="w-full lg:w-6/12 px-4">
-                  <div class="relative w-full mb-3">
-                    <label
-                      class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                      htmlfor="grid-password"
-                    >
-                      Last Name
-                    </label>
-                    <input
-                      type="text"
-                      class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                      value="<?php echo $userData['LastName']; ?>"
-                      disabled
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <hr class="mt-6 border-b-1 border-blueGray-300" />
-
-              <h6
-                class="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase"
-              >
-                Contact Information
-              </h6>
-              <div class="flex flex-wrap">
-                <div class="w-full lg:w-12/12 px-4">
-                  <div class="relative w-full mb-3">
-                    <label
-                      class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                      htmlfor="grid-password"
-                    >
-                      Address
-                    </label>
-                    <input
-                      type="text"
-                      class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                      placeholder="Madani Avenue, 100 Feet, Dhaka"
-                    />
-                  </div>
-                </div>
-                <div class="w-full lg:w-4/12 px-4">
-                  <div class="relative w-full mb-3">
-                    <label
-                      class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                      htmlfor="grid-password"
-                    >
-                      City
-                    </label>
-                    <input
-                      type="text"
-                      class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                      placeholder="Dhaka"
-                    />
-                  </div>
-                </div>
-                <div class="w-full lg:w-4/12 px-4">
-                  <div class="relative w-full mb-3">
-                    <label
-                      class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                      htmlfor="grid-password"
-                    >
-                      Country
-                    </label>
-                    <input
-                      type="text"
-                      class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                      placeholder="Bangladesh"
-                    />
-                  </div>
-                </div>
-                <div class="w-full lg:w-4/12 px-4">
-                  <div class="relative w-full mb-3">
-                    <label
-                      class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                      htmlfor="grid-password"
-                    >
-                      Postal Code
-                    </label>
-                    <input
-                      type="text"
-                      class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                      placeholder="1212"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <hr class="mt-6 border-b-1 border-blueGray-300" />
-
-              <h6
-                class="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase"
-              >
-                About CLub
-              </h6>
-              <div class="flex flex-wrap">
-                <div class="w-full lg:w-4/12 px-4">
-                  <div class="relative w-full mb-3">
-                    <label
-                      class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                      htmlfor="grid-password"
-                    >
-                      Club Name
-                    </label>
-                    <input
-                      type="text"
-                      name="clubName"
-                      class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                      placeholder="Sports Club"
-                    />
-                  </div>
-                </div>
-                <div class="w-full lg:w-4/12 px-4">
-                  <div class="relative w-full mb-3">
-                    <label
-                      class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                      htmlfor="grid-password"
-                    >
-                      Club Work(shortly)
-                    </label>
-                    <input
-                      type="text"
-                      name="clubWork"
-                      class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                      placeholder="Sports"
-                    />
-                  </div>
-                </div>
-                <div class="w-full lg:w-4/12 px-4">
-                  <div class="relative w-full mb-3">
-                    <label
-                      class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                      htmlfor="grid-password"
-                    >
-                      Club Goal(shortly)
-                    </label>
-                    <input
-                      type="text"
-                      name="clubGoal"
-                      class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                      placeholder="Win Champion Cup"
-                    />
-                  </div>
-                </div>
-                <div class="w-full lg:w-12/12 px-4">
-                  <div class="relative w-full mb-3">
-                    <label
-                      class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                      htmlfor="grid-password"
-                    >
-                      Club Description
-                    </label>
-                    <textarea
-                      type="text"
-                      name="clubDescription"
-                      class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                      rows="4"
-                      placeholder="write here...."
-                    ></textarea>
-                  </div>
-                </div>
-              </div>
-              <button
-                class="flex items-center justify-center w-full -px-4 py-2 text-lg font-bold tracking-wide text-gray-100 capitalize transition-colors duration-300 transform bg-black rounded-md hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
-              >
-                <span>Submit </span>
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </section>
+      </section>
+      <?php
+          }
+        }else{}
+      ?>
+    </main>
 
     <!-- Footer Section Start -->
-    <footer>
-      <?php
-        include('../../footer/footer.php');
-      ?>
-    </footer>
+    <footer><?php include('../../footer/footer.php'); ?></footer>
     <!-- Footer Section End -->
 
     <!-- Script Section -->
@@ -666,20 +452,5 @@
       defer
       src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"
     ></script>
-    <script src="../../js/sweetalert.js"></script>
-    <?php if(isset($_SESSION['Club_Status']) && $_SESSION['Club_Status'] != ''){ ?>
-    
-    <script>
-      swal({
-        title: "<?php echo $_SESSION['message']; ?>",
-        text: "<?php echo $_SESSION['Club_Status']; ?>",
-        icon: "<?php echo $_SESSION['Status']; ?>",
-        button: "OK. Done!",
-      });
-    </script>
-
-    <?php unset($_SESSION['Club_Status']); } ?>
   </body>
 </html>
-
-

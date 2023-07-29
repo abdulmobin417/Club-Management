@@ -1,5 +1,7 @@
 <?php
   require_once('../../db/db.php');
+  // ini_set('display_errors', 0);
+  // error_reporting(E_ALL);
 	session_start();
 	if (!isset($_SESSION['userId'])){
 		header('location:../../login/index.php');
@@ -8,6 +10,30 @@
   $query = "SELECT * FROM `users` WHERE userId = '$userId';";
   $createQuery = mysqli_query($conn, $query);
   $userData = mysqli_fetch_array($createQuery);
+
+  $clubId = $_GET['clubId'];
+  $clubQuery = "SELECT * FROM `clubs` WHERE clubId = '$clubId';";
+  $createClubQuery = mysqli_query($conn, $clubQuery);
+  $clubData = mysqli_fetch_array($createClubQuery);
+
+  $memberQuery = "SELECT * FROM `clubmember` WHERE clubId = '$clubId' AND userId = '$userId';";
+  $memberClubQuery = mysqli_query($conn, $memberQuery);
+  $memberData = mysqli_fetch_array($memberClubQuery);
+
+  $clubRole = '';
+  if($userData['userId'] == $clubData['userId']){
+    $clubRole = 'admin';
+  }else if($memberClubQuery->num_rows > 0){
+    $clubRole = 'member';
+    $roleStatus = $memberData['status'];
+  }
+
+  $postQuery = "SELECT * FROM `clubevent` WHERE clubId = '$clubId';";
+  $clubPostQuery = mysqli_query($conn, $postQuery);
+  // $postData = mysqli_fetch_assoc($clubPostQuery);//->num_rows
+
+  $memberCountQuery = "SELECT * FROM `clubmember` WHERE clubId = '$clubId';";
+  $memberCountClubQuery = mysqli_query($conn, $memberCountQuery);
 ?>
 
 <!DOCTYPE html>
@@ -26,10 +52,9 @@
       defer
     ></script>
 </head>
-
 <body class="bg-gray-100">
-    <!-- Navbar Section Start -->
-    <section class="shadow-lg font-poppins">
+  <!-- Navbar Section Start -->
+  <section class="shadow-lg font-poppins">
       <div class="max-w-6xl px-4 mx-auto" x-data="{open:false}">
         <div class="relative flex items-center justify-between py-4">
           <a href="#" class="text-2xl font-semibold leading-none"
@@ -69,7 +94,7 @@
               >
             </li>
             <li>
-              <a href="" class="text-sm text-gray-700 hover:text-teal-700"
+              <a href="../eventList/index.php" class="text-sm text-gray-700 hover:text-teal-700"
                 >Events</a
               >
             </li>
@@ -409,78 +434,85 @@
           </div>
         </div>
       </div>
-    </section>
-    <!-- Navbar Section End -->
-    <main class="max-w-7xl mx-auto">
-        <section class="pb-11">
-            <div>
-                <div class="grid lg:grid-cols-[70%,1fr]  gap-4  pt-9 pb-7">
-                    <div>
-                        <div class="p-4 ">
-                            <nav class="flex mb-4">
-                                <ol class="inline-flex items-center">
-                                    <li class="inline-flex items-center">
-                                        <a href="#"
-                                            class="inline-flex items-center text-sm text-gray-700 hover:text-gray-900  ">
-                                            Home
+  </section>
+  <!-- Navbar Section End -->
+  <main class="max-w-7xl mx-auto">
+    <section class="pb-11">
+      <div>
+        <div class="grid lg:grid-cols-[70%,1fr]  gap-8  pt-9 pb-7">
+          <div class="">
+            <div class="pt-4 pb-4 pl-4 mb-0 pr-8 border-r border-gray-400">
+              <nav class="flex mb-4">
+                <ol class="inline-flex items-center">
+                  <li class="inline-flex items-center">
+                                      <a href="../index.php" class="inline-flex items-center text-sm text-gray-700 hover:text-gray-900  ">
+                                        Home
+                                      </a>
+                  </li>
+                  <li>
+                                      <div class="flex items-center">
+                                          <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                                          </svg>
+                                          <a href="../clubList/index.php" class="text-sm font-medium text-gray-700 hover:text-gray-900">Clubs</a>
+                                      </div>
+                  </li>
+                  <li>
+                                      <div class="flex items-center">
+                                        <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                          <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        <a href="" class="text-sm font-medium text-teal-500 hover:border-teal-700  ">
+                                          Club Details
                                         </a>
-                                    </li>
-                                    <li>
-                                        <div class="flex items-center">
-                                            <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path fill-rule="evenodd"
-                                                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                                    clip-rule="evenodd"></path>
-                                            </svg>
-                                            <a href="#"
-                                                class="text-sm font-medium text-gray-700 hover:text-gray-900">Clubs</a>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="flex items-center">
-                                            <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <path fill-rule="evenodd"
-                                                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                                    clip-rule="evenodd"></path>
-                                            </svg>
-                                            <a href="#" class="text-sm font-medium text-teal-500 hover:border-teal-700  ">
-                                                Club Details
-                                            </a>
-                                        </div>
-                                    </li>
-                                </ol>
-                            </nav>
-                            <img src="https://i.postimg.cc/vHR493zf/pexels-pixabay-269077.jpg" alt=""
-                                class="object-cover w-full rounded-md h-96">
-                            <div class="flex flex-col my-5 gap-5">
-
-                                <div class="flex items-center gap-3 mr-6 no-underline ">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                        fill="none" stroke="#14b8a6" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round">
-                                        <rect x="3" y="3" width="18" height="18" rx="2" />
-                                        <path d="M21 12H3M12 3v18" />
-                                    </svg>
-                                    <span class="text-base font-bold">Organized 13 Events</span>
-                                </div>
-                                <div class="flex items-center gap-3 mr-6 no-underline ">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" class="w-5 h-5 bi bi-bank2"
-                                        height="24" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                        <circle cx="9" cy="7" r="4"></circle>
-                                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                                    </svg>
-                                    <span class="text-base font-bold">44 Members</span>
-                                </div>
-                            </div>
-                            <h2 class="mb-4 text-2xl font-semibold font-poppins ">
-                                Easy and Most Powerful Server and Platform.</h2>
-                            <div class=" font-poppins ">
-                                <Lorem> Lorem ipsum dolor sit amet, labore et dolore magna aliqua. Ut enim ad minim veniam
+                                      </div>
+                  </li>
+                </ol>
+              </nav>
+              <img src="../../images/<?php echo $clubData['image']; ?>" alt="" class="object-cover  rounded-md h-96">
+              <div class="flex flex-col my-5 gap-5">
+                <div class="flex items-center gap-3 mr-6 no-underline ">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                    <path d="M21 12H3M12 3v18" />
+                  </svg>
+                  <span class="text-base font-bold">Organized <?php echo $clubPostQuery->num_rows; ?> Events</span>
+                </div>
+                <div class="flex items-center gap-3 mr-6 no-underline ">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" class="w-5 h-5 bi bi-bank2" height="24" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                  </svg>
+                  <span class="text-base font-bold"><?php echo $memberCountClubQuery->num_rows; ?> Members</span>
+                </div>
+              </div>
+              <div class="flex justify-between">
+                <h2 class="mb-4 text-2xl font-semibold font-poppins ">
+                  <?php echo $clubData['clubName']; ?>
+                </h2>
+                <div class="flex justify-between items-center">
+                  <p class="text-gray-600 flex mr-10 items-center">
+                    <span class="mr-2">
+                      <svg class="w-5 h-5 text-gray-600 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                        <path fill="currentColor" d="M8 1V0v1Zm4 0V0v1Zm2 4v1h1V5h-1ZM6 5H5v1h1V5Zm2-3h4V0H8v2Zm4 0a1 1 0 0 1 .707.293L14.121.879A3 3 0 0 0 12 0v2Zm.707.293A1 1 0 0 1 13 3h2a3 3 0 0 0-.879-2.121l-1.414 1.414ZM13 3v2h2V3h-2Zm1 1H6v2h8V4ZM7 5V3H5v2h2Zm0-2a1 1 0 0 1 .293-.707L5.879.879A3 3 0 0 0 5 3h2Zm.293-.707A1 1 0 0 1 8 2V0a3 3 0 0 0-2.121.879l1.414 1.414ZM2 6h16V4H2v2Zm16 0h2a2 2 0 0 0-2-2v2Zm0 0v12h2V6h-2Zm0 12v2a2 2 0 0 0 2-2h-2Zm0 0H2v2h16v-2ZM2 18H0a2 2 0 0 0 2 2v-2Zm0 0V6H0v12h2ZM2 6V4a2 2 0 0 0-2 2h2Zm16.293 3.293C16.557 11.029 13.366 12 10 12c-3.366 0-6.557-.97-8.293-2.707L.293 10.707C2.557 12.971 6.366 14 10 14c3.634 0 7.444-1.03 9.707-3.293l-1.414-1.414ZM10 9v2a2 2 0 0 0 2-2h-2Zm0 0H8a2 2 0 0 0 2 2V9Zm0 0V7a2 2 0 0 0-2 2h2Zm0 0h2a2 2 0 0 0-2-2v2Z"/>
+                      </svg>
+                    </span>
+                    <?php echo $clubData['clubWork']; ?>
+                  </p>
+                  <p class="text-gray-600 flex mr-10 items-center">
+                    <span class="">
+                      <svg class="w-5 h-5 text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 16">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m2.707 14.293 5.586-5.586a1 1 0 0 0 0-1.414L2.707 1.707A1 1 0 0 0 1 2.414v11.172a1 1 0 0 0 1.707.707Z"/>
+                      </svg>
+                    </span>
+                    <?php echo $clubData['clubGoal']; ?>
+                  </p>
+                </div>
+              </div>
+              <div class=" font-poppins text-justify">
+                                <?php echo $clubData['clubDescription']; ?>
                                     consectetur adipiscing elit, sed do eiusmod tempor
                                     incididunt ut
                                     labore et dolore magna aliqua. Ut enim ad minim veniam. Lorem ipsum dolor sit amet,
@@ -494,56 +526,82 @@
                                     consectetur adipiscing elit, sed do eiusmod tempor
                                     incididunt ut
                                     labore et dolore magna aliqua. Ut enim ad minim veniam</p>
-                            </div>
+              </div>
+            </div>
+            <!-- join button -->
+            <div class="p-4 flex gap-4">
+              <?php if($clubRole == 'admin'){ ?>
+                <p class="px-6 py-3 bg-gray-500 font-bold text-xl text-white rounded-md flex items-center gap-2 uppercase">
+                  <span><?php echo $clubRole; ?></span>
+                </p>
+                <a class="" href="../manageClub/adminManage.php?clubId=<?php echo $clubId; ?>">
+                  <button class="px-6 py-3 bg-teal-500 font-bold text-xl text-white rounded-md hover:bg-teal-600 flex items-center gap-2 ">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M7 7l9.2 9.2M17 7v10H7" />
+                    </svg>
+                    <span>Manage Club</span>
+                  </button>
+                </a>
+              <?php }else if($clubRole == 'member'){ ?>
+                <p class="px-6 py-3 bg-gray-500 font-bold text-xl text-white rounded-md flex items-center gap-2 uppercase">
+                  <span><?php echo $roleStatus; ?></span>
+                </p>
+                <?php if($roleStatus != 'pending'){?>
+                  <a href="../manageClub/adminManage.php?clubId=<?php echo $clubId;?>">
+                    <button class="px-6 py-3 bg-teal-500 font-bold text-xl text-white rounded-md hover:bg-teal-600 flex items-center gap-2 ">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M7 7l9.2 9.2M17 7v10H7" />
+                      </svg>
+                      <span>See Club</span>
+                    </button>
+                  </a>
+                <?php } ?>
+              <?php }else{ ?>
+                <a href="./clubJoinProcess.php?clubId=<?php echo $clubId; ?>">
+                  <button class="px-6 py-3 bg-teal-500 font-bold text-xl text-white rounded-md hover:bg-teal-600 flex items-center gap-2 ">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M7 7l9.2 9.2M17 7v10H7" />
+                    </svg>
+                    <span>Join CLub</span>
+                  </button>
+                </a>
+              <?php } ?>                            
+            </div>
+            <!-- comment -->
+            <div class="p-4">
+              <h2 class="pb-4 text-base font-bold">
+                Members Feedback
+              </h2>
+              <div class="flex flex-col gap-5">
+                <div class="mb-10 border-b border-red-700 w-24"></div>
+                <div class="flex items-center mb-4 space-x-2">
+                  <div class="flex self-start flex-shrink-0 cursor-pointer">
+                    <img src="https://i.postimg.cc/JzmrHQmk/pexels-pixabay-220453.jpg" alt="" class="object-fill w-16 h-16 rounded-full">
+                  </div>
+                  <div class="flex items-center justify-center space-x-2 ">
+                    <div class="block">
+                      <div class="w-auto px-2 pb-2 ">
+                        <div class="font-medium">
+                          <a href="#" class="text-lg font-semibold hover:underline">
+                            <small>John Doe</small>
+                          </a>
                         </div>
-                        <!-- join button -->
-                        <div class="p-4">
-                            <button
-                                class="px-6 py-3 bg-teal-500 font-bold text-xl text-white rounded-md hover:bg-teal-600 flex items-center gap-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round">
-                                    <path d="M7 7l9.2 9.2M17 7v10H7" />
-                                </svg>
-                                <span>Join</span></button>
-                        </div>
-                        <!-- comment -->
-                        <div class="p-4">
-                            <h2 class="pb-4 text-base font-bold">
-                                Members Feedback
-                            </h2>
-                            <div class="flex flex-col gap-5">
-                                <div class="mb-10 border-b border-red-700 w-24"></div>
-                                <div class="flex items-center mb-4 space-x-2">
-                                    <div class="flex self-start flex-shrink-0 cursor-pointer">
-                                        <img src="https://i.postimg.cc/JzmrHQmk/pexels-pixabay-220453.jpg" alt=""
-                                            class="object-fill w-16 h-16 rounded-full">
-                                    </div>
-                                    <div class="flex items-center justify-center space-x-2 ">
-                                        <div class="block">
-                                            <div class="w-auto px-2 pb-2 ">
-                                                <div class="font-medium">
-                                                    <a href="#" class="text-lg font-semibold hover:underline">
-                                                        <small>John Doe</small>
-                                                    </a>
-                                                </div>
-                                                <div class="text-sm text-gray-500">
-                                                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Expedita,
+                        <div class="text-sm text-gray-500">
+                                                  Lorem ipsum, dolor sit amet consectetur adipisicing elit. Expedita,
                                                     maiores!
-                                                </div>
-                                            </div>
-                                            <div class="flex items-center justify-start w-full text-xs">
-                                                <div
-                                                    class="flex items-center justify-center px-2 space-x-1 font-semibold text-gray-700">
-                                                    <a href="#" class="hover:underline">
-                                                        <span>10m ago</span>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="flex items-center mb-4 space-x-2">
+                        </div>
+                      </div>
+                      <div class="flex items-center justify-start w-full text-xs">
+                        <div class="flex items-center justify-center px-2 space-x-1 font-semibold text-gray-700">
+                          <a href="#" class="hover:underline">
+                            <span>10m ago</span>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex items-center mb-4 space-x-2">
                                     <div class="flex self-start flex-shrink-0 cursor-pointer">
                                         <img src="https://i.postimg.cc/RhQYkKYk/pexels-italo-melo-2379005.jpg" alt=""
                                             class="object-fill w-16 h-16 rounded-full">
@@ -571,8 +629,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="flex items-center space-x-2">
+                </div>
+                <div class="flex items-center space-x-2">
                                     <div class="flex self-start flex-shrink-0 cursor-pointer">
                                         <img src="https://i.postimg.cc/q7pv50zT/pexels-edmond-dant-s-4342352.jpg" alt=""
                                             class="object-fill w-16 h-16 rounded-full">
@@ -600,82 +658,71 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="p-4">
-                            <div class="p-6 mb-6 bg-white shadow-md my-10">
-                                <h2 class="mb-6 text-xl font-semibold text-left font-gray-600">
-                                    Leave a comment</h2>
-                                <form action="" class="">
-                                    <div class="mb-6 ">
-                                        <textarea type="message" placeholder="write a comment" required=""
-                                            class="block w-full resize-none px-4 leading-tight text-gray-700 bg-gray-100 border rounded py-7"></textarea>
-                                    </div>
-                                    <div class="">
+                </div>
+              </div>
+            </div>
+            <div class="p-4">
+              <div class="p-6 mb-6 bg-white shadow-md my-10">
+                <h2 class="mb-6 text-xl font-semibold text-left font-gray-600">
+                  Leave a comment
+                </h2>
+                <form action="" class="">
+                  <div class="mb-6 ">
+                    <textarea type="message" placeholder="write a comment" required="" class="block w-full resize-none px-4 leading-tight text-gray-700 bg-gray-100 border rounded py-7"></textarea>
+                  </div>
+                  <div class="">
                                         <button
                                             class="px-4 py-2 text-xs font-medium text-gray-100 bg-teal-500 hover:bg-teal-700">
                                             Submit comment
                                         </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                        <!-- comment -->
+                  </div>
+                </form>
+              </div>
+            </div>
+            <!-- comment -->
+          </div>
+          <div class="px-4 lg:px-0">
+            <div class="px-2 pt-4 lg:px-0 ">
+              <div class="bg-white p-6 rounded-xl shadow-xl">
+                <h2 class="pb-2 text-lg font-semibold leading-5 tracking-tight text-gray-900  ">
+                  Events List
+                </h2>
+                <div class="w-16 mb-5 border-b-2 border-teal-400 inset-px "></div>
+                  <div class="flex w-full mb-4 border-b border-gray-200 ">
+                    <div>
+                      <img class="object-cover w-20 h-20 mr-4 rounded" src="https://i.postimg.cc/SKtsKrRX/pexels-marc-mueller-380769.jpg" alt="">
                     </div>
-                    <div class="px-4 lg:px-0">
-                        <div class="px-2 pt-4 lg:px-0 ">
-                            <div>
-                                <h2 class="pb-2 text-lg font-semibold leading-5 tracking-tight text-gray-900  ">
-                                    Events List</h2>
-                                <div class="w-16 mb-5 border-b-2 border-teal-400 inset-px "></div>
-                                <div class="flex w-full mb-4 border-b border-gray-200 ">
-                                    <div>
-                                        <img class="object-cover w-20 h-20 mr-4 rounded"
-                                            src="https://i.postimg.cc/SKtsKrRX/pexels-marc-mueller-380769.jpg" alt="">
-                                    </div>
-                                    <div class="flex-1 mb-5">
-                                        <h2
-                                            class="mb-1 text-base font-medium tracking-tight text-gray-700 hover:text-teal-600 ">
-                                            <a href="#">
-                                                Lorem ipsum dolor sit amet, labore et dolore</a>
-                                        </h2>
-                                        <a href="#" class="flex items-center mr-6 no-underline ">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                fill="currentColor" class="w-3 h-3 text-teal-600  bi bi-calendar"
-                                                viewBox="0 0 16 16">
-                                                <path
-                                                    d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
-                                            </svg>
-                                            <span class="ml-2 text-xs text-gray-500  hover:text-teal-600">May
-                                                10, 2022</span>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="flex w-full mb-4 border-b border-gray-200 ">
-                                    <div>
-                                        <img class="object-cover w-20 h-20 mr-4 rounded"
-                                            src="https://i.postimg.cc/63GLBzwc/aqq.jpg" alt="">
-                                    </div>
-                                    <div class="flex-1 mb-5">
-                                        <h2
-                                            class="mb-1 text-base font-medium tracking-tight text-gray-700 hover:text-teal-600 ">
-                                            <a href="#">
-                                                Lorem ipsum dolor sit amet, labore et dolore</a>
-                                        </h2>
-                                        <a href="#" class="flex items-center mr-6 no-underline ">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                                fill="currentColor" class="w-3 h-3 text-teal-600  bi bi-calendar"
-                                                viewBox="0 0 16 16">
-                                                <path
-                                                    d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
-                                            </svg>
-                                            <span class="ml-2 text-xs text-gray-500 hover:text-teal-600  ">
-                                                May 10, 2022</span>
-                                        </a>
-                                    </div>
-                                </div>
-                                <div class="flex w-full mb-4 ">
+                    <div class="flex-1 mb-5">
+                      <h2 class="mb-1 text-base font-medium tracking-tight text-gray-700 hover:text-teal-600 ">
+                        <a href="#">Lorem ipsum dolor sit amet, labore et dolore</a>
+                      </h2>
+                      <a href="#" class="flex items-center mr-6 no-underline ">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="w-3 h-3 text-teal-600  bi bi-calendar" viewBox="0 0 16 16">
+                          <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
+                        </svg>
+                        <span class="ml-2 text-xs text-gray-500  hover:text-teal-600">May 10, 2022</span>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="flex w-full mb-4 border-b border-gray-200 ">
+                    <div>
+                      <img class="object-cover w-20 h-20 mr-4 rounded" src="https://i.postimg.cc/63GLBzwc/aqq.jpg" alt="">
+                    </div>
+                    <div class="flex-1 mb-5">
+                      <h2 class="mb-1 text-base font-medium tracking-tight text-gray-700 hover:text-teal-600 ">
+                        <a href="#">Lorem ipsum dolor sit amet, labore et dolore</a>
+                      </h2>
+                      <a href="#" class="flex items-center mr-6 no-underline ">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="w-3 h-3 text-teal-600  bi bi-calendar" viewBox="0 0 16 16">
+                          <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
+                        </svg>
+                        <span class="ml-2 text-xs text-gray-500 hover:text-teal-600 ">
+                          May 10, 2022
+                        </span>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="flex w-full mb-4 ">
                                     <div>
                                         <img class="object-cover w-20 h-20 mr-4 rounded"
                                             src="https://i.postimg.cc/PqC1MKLH/pexels-pixabay-38271.jpg" alt="">
@@ -697,31 +744,47 @@
                                                 10, 2022</span>
                                         </a>
                                     </div>
-                                </div>
-                                <div>
-                                    <button
-                                        class="px-6 py-2 text-base font-bold bg-teal-500 hover:bg-teal-600 text-white rounded-md">View
-                                        All</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                  </div>
+                  <div>
+                    <button class="px-6 py-2 text-base font-bold bg-teal-500 hover:bg-teal-600 text-white rounded-md">View All</button>
+                  </div>
+              </div>
             </div>
-        </section>
-    </main>
-    <!-- Footer Section Start -->
-    <footer>
-      <?php
-        include('../../footer/footer.php');
-      ?>
-    </footer>
-    <!-- Footer Section End -->
-    <!-- Script Section -->
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <!-- Footer Section Start -->
+  <footer>
+    <?php
+      include('../../footer/footer.php');
+    ?>
+  </footer>
+  <!-- Footer Section End -->
+  <!-- Script Section -->
     <script
       defer
       src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"
     ></script>
+    <script src="../../js/sweetalert.js"></script>
+    <?php if(isset($_SESSION['join_club']) && $_SESSION['join_club'] != ''){ ?>
+    
+    <script>
+      swal({
+        title: "<?php echo $_SESSION['join_club']; ?>",
+        text: "<?php echo $_SESSION['message']; ?>",
+        icon: "<?php echo $_SESSION['Status']; ?>",
+        button: "OK. Done!",
+      });
+    </script>
+
+    <?php 
+        unset($_SESSION['login_Status']); 
+        unset($_SESSION['Status']); 
+        unset($_SESSION['message']); 
+      } 
+    ?>
 </body>
 
 </html>
