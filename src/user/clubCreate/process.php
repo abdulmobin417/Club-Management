@@ -8,10 +8,11 @@
   $clubWork = $_POST['clubWork'];
   $clubGoal = $_POST['clubGoal'];
   $clubDescription = $_POST['clubDescription'];
+  $img = '../../images/'; //. $_POST[''];
 
   // echo $clubName . ' ' . $clubWork . ' ' . $clubGoal . ' ' . $clubDescription;
 
-  $query = "INSERT INTO clubs (userId, clubName, clubWork, clubGoal, clubDescription) VALUES('$userId', '$clubName', '$clubWork', '$clubGoal', '$clubDescription');";
+  $query = "INSERT INTO clubs (userId, clubName, clubWork, clubGoal, clubDescription, image) VALUES('$userId', '$clubName', '$clubWork', '$clubGoal', '$clubDescription', '$img');";
   $create_query = mysqli_query($conn,$query);
 
   if($create_query){

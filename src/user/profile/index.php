@@ -11,6 +11,12 @@
 
   $clubQuery = "SELECT * FROM `clubs` WHERE userId = '$userId';";
   $ClubCreateQuery = mysqli_query($conn, $clubQuery);
+
+  $postQuery = "SELECT * FROM `clubevent` WHERE userId = '$userId';";
+  $clubPostQuery = mysqli_query($conn, $postQuery);
+
+  $memberQuery = "SELECT * FROM `clubmember` WHERE userId = '$userId';";
+  $clubMemberQuery = mysqli_query($conn, $memberQuery);
 ?>
 
 <!DOCTYPE html>
@@ -424,7 +430,7 @@
               <div class="image overflow-hidden">
                 <img
                   class="w-full mx-auto"
-                  src="https://cdn.australianageingagenda.com.au/wp-content/uploads/2015/06/28085920/Phil-Beckett-2-e1435107243361.jpg"
+                  src="../<?php echo $userData['image']; ?>"
                   alt=""
                 />
               </div>
@@ -457,67 +463,6 @@
                 </li>
               </ul>
             </div>
-            <!-- End of profile card -->
-            <div class="my-4"></div>
-            <!-- Friends card -->
-            <div class="bg-white p-3 hover:shadow">
-              <div
-                class="flex items-center space-x-3 font-semibold text-gray-900 text-xl leading-8"
-              >
-                <span class="text-green-500">
-                  <svg
-                    class="h-5 fill-current"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                    />
-                  </svg>
-                </span>
-                <span>Similar Profiles</span>
-              </div>
-              <div class="grid grid-cols-3">
-                <div class="text-center my-2">
-                  <img
-                    class="h-16 w-16 rounded-full mx-auto"
-                    src="https://cdn.australianageingagenda.com.au/wp-content/uploads/2015/06/28085920/Phil-Beckett-2-e1435107243361.jpg"
-                    alt=""
-                  />
-                  <a href="#" class="text-main-color">Kojstantin</a>
-                </div>
-                <div class="text-center my-2">
-                  <img
-                    class="h-16 w-16 rounded-full mx-auto"
-                    src="https://avatars2.githubusercontent.com/u/24622175?s=60&amp;v=4"
-                    alt=""
-                  />
-                  <a href="#" class="text-main-color">James</a>
-                </div>
-                <div class="text-center my-2">
-                  <img
-                    class="h-16 w-16 rounded-full mx-auto"
-                    src="https://cdn.australianageingagenda.com.au/wp-content/uploads/2015/06/28085920/Phil-Beckett-2-e1435107243361.jpg"
-                    alt=""
-                  />
-                  <a href="#" class="text-main-color">Natie</a>
-                </div>
-                <div class="text-center my-2">
-                  <img
-                    class="h-16 w-16 rounded-full mx-auto"
-                    src="https://avatars2.githubusercontent.com/u/24622175?s=60&amp;v=4"
-                    alt=""
-                  />
-                  <a href="#" class="text-main-color">Casey</a>
-                </div>
-              </div>
-            </div>
-            <!-- End of friends card -->
           </div>
           <!-- Right Side -->
           <div class="w-full md:w-9/12 mx-2 h-64">
@@ -623,22 +568,17 @@
                     <span class="tracking-wide">Event Posts</span>
                   </div>
                   <ul class="list-inside space-y-2">
+                    <?php
+                      if($clubPostQuery->num_rows>0){
+                        while($row1 = mysqli_fetch_assoc($clubPostQuery)){
+                    ?>
                     <li>
-                      <div class="text-teal-600">Owner at Her Company Inc.</div>
-                      <div class="text-gray-500 text-xs">March 2020 - Now</div>
+                      <div class="text-teal-600"><?php echo $row1['eventTitle'] ?></div>
+                      <div class="text-gray-500 text-xs">
+                        <p><?php echo $row1['eventDate'] ?></p>
+                      </div>
                     </li>
-                    <li>
-                      <div class="text-teal-600">Owner at Her Company Inc.</div>
-                      <div class="text-gray-500 text-xs">March 2020 - Now</div>
-                    </li>
-                    <li>
-                      <div class="text-teal-600">Owner at Her Company Inc.</div>
-                      <div class="text-gray-500 text-xs">March 2020 - Now</div>
-                    </li>
-                    <li>
-                      <div class="text-teal-600">Owner at Her Company Inc.</div>
-                      <div class="text-gray-500 text-xs">March 2020 - Now</div>
-                    </li>
+                    <?php }} ?>
                   </ul>
                 </div>
                 <div>
@@ -669,14 +609,22 @@
                     <span class="tracking-wide">Join Clubs</span>
                   </div>
                   <ul class="list-inside space-y-2">
+                    <?php
+                      if($clubMemberQuery->num_rows>0){
+                        while($row2 = mysqli_fetch_assoc($clubMemberQuery)){
+                          $clubNameQuery = "SELECT * FROM clubs WHERE clubId=".$row2['clubId'].";";
+                          $execute = mysqli_query($conn, $clubNameQuery);
+                          $nameData = mysqli_fetch_assoc($execute);
+                    ?>
                     <li>
-                      <div class="text-teal-600">Masters Degree in Oxford</div>
-                      <div class="text-gray-500 text-xs">March 2020 - Now</div>
+                      <div class="text-teal-600"><?php echo $nameData['clubName'] ?></div>
+                      <div class="text-gray-500 text-xs flex gap-3">
+                        <p><?php echo $row2['clubRole'] ?></p>
+                        <p>-</p>
+                        <p><?php echo $row2['status'] ?></p>
+                      </div>
                     </li>
-                    <li>
-                      <div class="text-teal-600">Bachelors Degreen in LPU</div>
-                      <div class="text-gray-500 text-xs">March 2020 - Now</div>
-                    </li>
+                    <?php }} ?>
                   </ul>
                 </div>
                 <div>

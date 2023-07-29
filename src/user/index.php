@@ -76,7 +76,7 @@
               >
             </li>
           </ul>
-          <div class="hidden lg:block">
+          <div class="hidden lg:block z-10">
             <div class="max-w-6xl px-4 mx-auto">
               <div
                 x-data="{ open: false }"

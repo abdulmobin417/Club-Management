@@ -63,7 +63,7 @@
               >
             </li>
             <li>
-              <a href="" class="text-sm text-gray-700 hover:text-teal-700"
+              <a href="../clubList/index.php" class="text-sm text-gray-700 hover:text-teal-700"
                 >Clubs</a
               >
             </li>
