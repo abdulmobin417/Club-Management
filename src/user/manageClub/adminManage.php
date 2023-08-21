@@ -991,7 +991,7 @@
                               Add
                             </a>
                           <?php } ?>
-                            <a href="../eventDetails/index.php?postId=<?php echo $row['eventId'] ?>" class="text-indigo-600 hover:text-indigo-900">
+                            <a href="../eventDetails/index.php?eventId=<?php echo $row['eventId'] ?>" class="text-indigo-600 hover:text-indigo-900">
                               See Post
                             </a>
                         </td>

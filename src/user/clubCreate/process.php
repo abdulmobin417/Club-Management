@@ -8,7 +8,7 @@
   $clubWork = $_POST['clubWork'];
   $clubGoal = $_POST['clubGoal'];
   $clubDescription = $_POST['clubDescription'];
-  $img = '../../images/'; //. $_POST[''];
+  $img = $_POST['clubImage'];
 
   // echo $clubName . ' ' . $clubWork . ' ' . $clubGoal . ' ' . $clubDescription;
 
@@ -26,5 +26,4 @@
     $_SESSION['Status'] = "error";
     header('location:index.php');
   }
-
 ?>

@@ -11,7 +11,7 @@
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme='light'>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -25,6 +25,22 @@
       src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"
       defer
     ></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@3.5.1/dist/full.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+      input::file-selector-button {
+        font-weight: bold;
+        color: white;
+        padding: 9px;
+        border: 2px solid #242424;
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+        background-color: #242424;
+        margin-right: 10px;
+        margin-left: -18px;
+      }
+    </style>
   </head>
   <body class="">
     <!-- Navbar Section Start -->
@@ -641,6 +657,14 @@
                     ></textarea>
                   </div>
                 </div>
+              </div>
+              <div class="form-control ml-5 mb-4">
+                <label class="label uppercase text-blueGray-600 text-xs font-semibold">
+                  <span class="label-text">Club Image</span>
+                </label>
+                <label class="input-group">
+                  <input type="file" placeholder="choose image..." name="clubImage" class="input input-bordered w-full" />
+                </label>
               </div>
               <button
                 class="flex items-center justify-center w-full -px-4 py-2 text-lg font-bold tracking-wide text-gray-100 capitalize transition-colors duration-300 transform bg-black rounded-md hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
